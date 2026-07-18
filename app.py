@@ -4,7 +4,7 @@ from bot import bot, dp
 
 
 async def main():
-    print("🚀 Solana AI Trading Bot Started...")
+    print(" Solana AI Trading Bot Started...")
     await dp.start_polling(bot)
 
 
