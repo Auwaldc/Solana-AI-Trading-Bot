@@ -1,2 +1,1 @@
-from telegram import bot, dp
-from telegram import start
+from bot import bot, dp
