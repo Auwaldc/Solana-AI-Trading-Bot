@@ -24,3 +24,4 @@ async def start(message: Message):
         "🤖 <b>Solana AI Trading Bot</b>\n\n"
         "✅ Welcome Admin."
     )
+__all__ = ["bot", "dp", "start"]
