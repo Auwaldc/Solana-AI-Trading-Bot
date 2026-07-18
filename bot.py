@@ -1,16 +1,23 @@
-from aiogram import Bot, Dispatcher, F
+from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
-from aiogram.types import Message
+from aiogram.types import (
+    Message,
+    ReplyKeyboardMarkup,
+    KeyboardButton,
+)
 from aiogram.filters import CommandStart
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 
 from config import BOT_TOKEN, OWNER_ID, BOT_PIN
 
+
 bot = Bot(
     token=BOT_TOKEN,
-    default=DefaultBotProperties(parse_mode=ParseMode.HTML)
+    default=DefaultBotProperties(
+        parse_mode=ParseMode.HTML
+    )
 )
 
 dp = Dispatcher()
@@ -18,6 +25,29 @@ dp = Dispatcher()
 
 class LoginState(StatesGroup):
     pin = State()
+
+
+admin_keyboard = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text="💰 Wallet"),
+            KeyboardButton(text="📈 Trading"),
+        ],
+        [
+            KeyboardButton(text="👀 Wallet Tracker"),
+            KeyboardButton(text="🤖 AI Hunter"),
+        ],
+        [
+            KeyboardButton(text="⚙️ Settings"),
+            KeyboardButton(text="📊 Reports"),
+        ],
+        [
+            KeyboardButton(text="🔔 Notifications"),
+            KeyboardButton(text="🛑 Emergency Stop"),
+        ],
+    ],
+    resize_keyboard=True,
+)
 
 
 @dp.message(CommandStart())
@@ -45,6 +75,8 @@ async def check_pin(message: Message, state: FSMContext):
     await state.clear()
 
     await message.answer(
-        "✅ Login Successful!\n\n"
-        "Welcome to Solana AI Trading Bot."
+        "✅ <b>Login Successful!</b>\n\n"
+        "🤖 <b>SOLANA AI TRADING BOT</b>\n\n"
+        "Welcome, Admin.",
+        reply_markup=admin_keyboard
     )
