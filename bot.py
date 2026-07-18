@@ -1,10 +1,12 @@
-from aiogram import Bot, Dispatcher
+from aiogram import Bot, Dispatcher, F
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
 from aiogram.types import Message
 from aiogram.filters import CommandStart
+from aiogram.fsm.state import State, StatesGroup
+from aiogram.fsm.context import FSMContext
 
-from config import BOT_TOKEN, OWNER_ID
+from config import BOT_TOKEN, OWNER_ID, BOT_PIN
 
 bot = Bot(
     token=BOT_TOKEN,
@@ -14,14 +16,35 @@ bot = Bot(
 dp = Dispatcher()
 
 
+class LoginState(StatesGroup):
+    pin = State()
+
+
 @dp.message(CommandStart())
-async def start(message: Message):
+async def start(message: Message, state: FSMContext):
+
     if message.from_user.id != OWNER_ID:
         await message.answer("⛔ Access Denied!")
         return
 
+    await state.set_state(LoginState.pin)
+
     await message.answer(
-        "🤖 <b>Solana AI Trading Bot</b>\n\n"
-        "✅ Welcome Admin."
+        "🔒 <b>Admin Login</b>\n\n"
+        "Please enter your 4-digit PIN."
     )
-__all__ = ["bot", "dp", "start"]
+
+
+@dp.message(LoginState.pin)
+async def check_pin(message: Message, state: FSMContext):
+
+    if message.text != BOT_PIN:
+        await message.answer("❌ Wrong PIN!")
+        return
+
+    await state.clear()
+
+    await message.answer(
+        "✅ Login Successful!\n\n"
+        "Welcome to Solana AI Trading Bot."
+    )
